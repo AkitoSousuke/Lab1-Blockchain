@@ -32,6 +32,16 @@ public final class CanonicalEncoder {
             writeString(out, header.parentHash());
             writeString(out, header.stateHash());
             writeString(out, header.proposerId());
+            writeString(out, header.transactionsHash());
+            out.writeInt(header.validRound());
+            out.writeInt(header.prevoteProof().size());
+            for (Vote vote : header.prevoteProof()) {
+                byte[] encodedVote = encodeVote(vote);
+                out.writeInt(encodedVote.length);
+                out.write(encodedVote);
+                out.writeInt(vote.signature().length);
+                out.write(vote.signature());
+            }
         });
     }
 

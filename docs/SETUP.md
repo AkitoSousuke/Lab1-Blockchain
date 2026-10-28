@@ -30,25 +30,7 @@ Cả hai lệnh phải hiển thị phiên bản 21.
 
 Nếu lệnh không được nhận diện, kiểm tra lại quá trình cài JDK và biến môi trường `PATH`.
 
-## 2. Cài đặt Git
-
-Tải Git tại:
-
-https://git-scm.com/downloads
-
-Sau khi cài, chạy:
-
-```bash
-git --version
-```
-
-Nếu hiển thị phiên bản Git nghĩa là đã cài thành công.
-
 ## 3. Cài đặt VS Code
-
-Tải tại:
-
-https://code.visualstudio.com/
 
 Mở VS Code và truy cập Extensions bằng tổ hợp phím `Ctrl + Shift + X`.
 

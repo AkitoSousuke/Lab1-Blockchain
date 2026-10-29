@@ -1,50 +1,150 @@
-# Thiết lập môi trường Python
+# Hướng dẫn cài đặt môi trường — Lab 01
 
-Khung dự án dùng Python >= 3.11. Chưa có chức năng bài tập để chạy.
+Tài liệu dành cho các thành viên mới tham gia dự án.
 
-## Windows / PowerShell
+**Mục tiêu:** Sau khi hoàn thành hướng dẫn, bạn có thể mở project trong VS Code và chạy thành công các bài kiểm thử Java.
 
-Cài Python, Git; có thể dùng VS Code với extension Python của Microsoft. Mở đúng thư mục có `pyproject.toml`, rồi kiểm tra:
+Không cần có kiến thức về blockchain để thực hiện phần này.
 
-```powershell
-py --list
-py -3.11 --version
-git --version
-py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
-.\.venv\Scripts\python.exe -c "import blockchain; print(blockchain.__file__)"
-```
+## 1. Cài đặt Java JDK 21
 
-Có thể thay `-3.11` bằng phiên bản Python mới hơn đã cài. Nếu không có launcher `py`, dùng `python --version`, xác nhận >= 3.11 rồi dùng `python -m venv .venv`. Gọi trực tiếp Python trong `.venv` không cần activate và không cần đổi Execution Policy của PowerShell.
+Tải JDK 21 từ:
 
-## macOS / Linux
+https://adoptium.net/
+
+Chọn Java 21 (LTS), hệ điều hành Windows và phiên bản phù hợp với máy.
+
+Sau khi cài đặt, mở Terminal trong VS Code:
 
 ```bash
-python3 --version
-python3 -m venv .venv
-.venv/bin/python -m pip install -e '.[dev]'
-.venv/bin/python -c 'import blockchain; print(blockchain.__file__)'
+java -version
 ```
 
-Xác nhận `python3` >= 3.11 trước khi tạo môi trường. Lần cài package có thể cần Internet. Editable install giúp import package ngay từ `src/blockchain/`.
+Tiếp tục:
 
-## VS Code
+```bash
+javac -version
+```
 
-Mở thư mục gốc, dùng `Python: Select Interpreter` và chọn Python trong `.venv`. Dùng cùng interpreter này để cài dependency, import package và chạy pytest.
+Cả hai lệnh phải hiển thị phiên bản 21.
 
-## Kiểm thử sau khi triển khai
+Nếu lệnh không được nhận diện, kiểm tra lại quá trình cài JDK và biến môi trường `PATH`.
 
-Windows: `.\.venv\Scripts\python.exe -m pytest`.
+## 3. Cài đặt VS Code
 
-macOS/Linux: `.venv/bin/python -m pytest`.
+Mở VS Code và truy cập Extensions bằng tổ hợp phím `Ctrl + Shift + X`.
 
-Pytest đã được cấu hình tìm test trong `tests/`; tên file sẽ là `test_*.py`. Hiện các thư mục test chỉ có `.gitkeep`, nên `no tests ran` với exit code 5 là kết quả dự kiến, không phải kiểm chứng thuật toán. Không thêm test luôn PASS để che việc thiếu test.
+Tìm và cài:
 
-## Xử lý lỗi thường gặp
+**Extension Pack for Java — Microsoft**
 
-- Không tìm được Python: kiểm tra cài đặt/PATH hoặc `py --list`.
-- `No module named blockchain`: đứng tại thư mục gốc và chạy editable install bằng đúng interpreter `.venv`.
-- `No module named pytest`: cài extra `.[dev]` bằng đúng interpreter `.venv`.
-- Không chạy được simulator: hiện chưa có CLI hoặc implementation; không có lệnh chạy bài lab ở giai đoạn này.
+Extension này hỗ trợ lập trình, chạy và kiểm thử Java.
 
-Dependency runtime hiện rỗng. Nhóm sẽ chọn thư viện mật mã và cơ chế khóa phiên bản trước giai đoạn triển khai/tái lập kết quả; bản cấu trúc này không cài dependency thay cho từng thành viên.
+## 4. Clone repository
+
+Sau khi trưởng nhóm cung cấp đường dẫn GitHub, mở Git Bash và chạy:
+
+```bash
+git clone <REPOSITORY_URL>
+```
+
+Thay `<REPOSITORY_URL>` bằng địa chỉ repository thực tế.
+
+Di chuyển vào thư mục vừa clone:
+
+```bash
+cd Lab1-Blockchain
+```
+
+Tên thư mục thực tế phụ thuộc vào tên repository.
+
+## 5. Mở project trong VS Code
+
+Trong thư mục project, chạy:
+
+```bash
+code .
+```
+
+Hoặc mở VS Code, chọn:
+
+`File → Open Folder`
+
+Chọn thư mục chứa `pom.xml`.
+
+Chờ VS Code nhận diện Java project.
+
+## 6. Chạy kiểm thử
+
+Trong Git Bash:
+
+```bash
+./mvnw clean test
+```
+
+Trong PowerShell:
+
+```powershell
+.\mvnw.cmd clean test
+```
+
+**Không cần cài Maven riêng.**
+
+Maven Wrapper sẽ sử dụng phiên bản Maven đã được cấu hình trong project.
+
+Lần đầu chạy có thể cần tải Maven và thư viện JUnit từ Internet.
+
+Khi chạy thành công, terminal hiển thị:
+
+```text
+Tests run: 3, Failures: 0, Errors: 0
+BUILD SUCCESS
+```
+
+Số lượng test có thể tăng khi dự án phát triển.
+
+## 7. Nếu gặp lỗi
+
+### Không nhận diện `java`
+
+Kiểm tra JDK đã cài và biến môi trường `PATH`.
+
+### Java không đúng phiên bản
+
+Kiểm tra:
+
+```bash
+java -version
+javac -version
+```
+
+Cả hai phải sử dụng Java 21.
+
+### Không chạy được Maven Wrapper
+
+Kiểm tra thư mục project có các file:
+
+- `mvnw`
+- `mvnw.cmd`
+- `.mvn/wrapper/maven-wrapper.properties`
+- `pom.xml`
+
+Nếu dùng Windows PowerShell, thử `.\mvnw.cmd clean test`.
+
+### Maven báo lỗi tải dependency
+
+Kiểm tra kết nối Internet và chạy lại.
+
+Nếu vẫn lỗi, gửi toàn bộ thông báo lỗi cho nhóm thay vì tự ý thay đổi `pom.xml`.
+
+## 8. Xác nhận hoàn thành
+
+Thành viên được xem là hoàn thành thiết lập khi:
+
+- [ ] `java -version` hiển thị Java 21.
+- [ ] `javac -version` hiển thị Java 21.
+- [ ] `git --version` chạy thành công.
+- [ ] VS Code nhận diện Java project.
+- [ ] `./mvnw clean test` hiển thị `BUILD SUCCESS`.
+
+Sau khi hoàn thành, thông báo cho trưởng nhóm để được giao nhiệm vụ lập trình.

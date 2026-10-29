@@ -1,22 +1,15 @@
-# Python environments and generated files
-.venv/
-venv/
-__pycache__/
-*.py[cod]
-*.egg-info/
-build/
-dist/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-.coverage.*
-htmlcov/
+# Maven
+target/
 
-# Editors and OS
+# VS Code
 .vscode/
 *.code-workspace
+
+# IntelliJ
 .idea/
+*.iml
+
+# OS
 .DS_Store
 Thumbs.db
 
@@ -26,7 +19,6 @@ Thumbs.db
 *.key
 *.pem
 
-# Temporary files; keep intentional evidence in logs/ trackable
+# Temporary files
 *.tmp
-tmp/
-logs/local/
+*.log

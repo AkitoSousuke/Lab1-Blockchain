@@ -1,102 +1,61 @@
-# Lab 01 — Mô phỏng Blockchain Layer 1
+# Lab 01 - Mô phỏng Blockchain Layer 1 bằng Python
 
-## 1. Giới thiệu
+Dự án nhóm cho bài Lab 01 môn Blockchain: xây dựng mạng mô phỏng mà các node trung thực thống nhất chuỗi block finalized và trạng thái, kể cả khi có lỗi mạng hoặc validator Byzantine.
 
-Đây là đồ án thực hành số 1 của môn Blockchain.
+**Trạng thái hiện tại: chỉ có khung thư mục Python và tài liệu.** Các file `.py` chỉ chứa mô tả trách nhiệm; chưa có thuật toán, CLI, test hay simulator chạy được.
 
-Nhóm sẽ sử dụng Java để xây dựng một chương trình mô phỏng mạng blockchain đơn giản.
+## Đọc tài liệu theo thứ tự
 
-**Chúng ta không xây dựng một đồng tiền mã hóa thực tế, không sử dụng Ethereum và không cần viết giao diện web.**
+1. [SETUP](docs/SETUP.md): chuẩn bị môi trường Python.
+2. [PROJECT_STRUCTURE](docs/PROJECT_STRUCTURE.md): mục đích từng thư mục và từng file.
+3. [INTERFACES](docs/INTERFACES.md): ranh giới các module và những quyết định còn cần thống nhất.
+4. [TASKS](docs/TASKS.md): gợi ý phân công 5 thành viên và checklist nghiệm thu.
 
-Mục tiêu chính là tìm hiểu cách nhiều máy tính (gọi là node) giao tiếp và thống nhất với nhau về dữ liệu, ngay cả khi mạng có lỗi hoặc một số node cố tình hoạt động sai.
+## Công nghệ và thiết lập
 
-## 2. Một số khái niệm cơ bản
+Chọn Python 3.11 trở lên cho khung này; dùng `venv`, `pip` và `pytest`. `pyproject.toml` chứa metadata, cấu hình package và cấu hình test. Chưa chọn/cài thư viện mật mã và chưa khóa phiên bản dependency.
 
-- **Node (nút mạng):** Một máy tính tham gia mạng blockchain. Trong bài này, mỗi node được mô phỏng bằng chương trình Java.
-- **Transaction (giao dịch):** Một yêu cầu thay đổi dữ liệu, chẳng hạn Alice muốn lưu thông điệp "Hello".
-- **Block (khối):** Một tập hợp các transaction được sắp xếp theo thứ tự.
-- **Blockchain (chuỗi khối):** Danh sách các block liên kết với nhau bằng mã băm.
-- **Validator (nút xác thực):** Node có quyền tham gia bỏ phiếu để quyết định block nào được chấp nhận.
-- **Consensus (đồng thuận):** Quá trình các validator thống nhất về một block.
-- **Byzantine node:** Node có thể hoạt động sai hoặc cố tình gửi thông tin mâu thuẫn.
-- **Finalization (chốt khối):** Khi một block được xác nhận cuối cùng, các node trung thực không được chốt một block khác tại cùng vị trí.
+PowerShell, chạy tại thư mục chứa `pyproject.toml`:
 
-## 3. Công nghệ sử dụng
-
-| Công nghệ | Mục đích                          |
-| --------- | --------------------------------- |
-| Java 21   | Ngôn ngữ lập trình chính          |
-| Maven     | Quản lý thư viện và biên dịch     |
-| JUnit 5   | Kiểm thử chương trình             |
-| Git       | Quản lý các phiên bản code        |
-| GitHub    | Làm việc nhóm và lưu trữ mã nguồn |
-| VS Code   | Môi trường lập trình              |
-
-Nhóm sử dụng Maven Wrapper nên không bắt buộc phải cài Maven riêng trên từng máy.
-
-## 4. Hướng dẫn chạy project
-
-### Chuẩn bị
-
-Cài đặt:
-
-1. Java JDK 21.
-2. Git.
-3. VS Code.
-4. Extension Pack for Java trong VS Code.
-
-### Tải project
-
-Sau khi được thêm vào GitHub repository, thành viên tải project về máy:
-
-```bash
-git clone <URL_REPOSITORY>
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+.\.venv\Scripts\python.exe -c "import blockchain; print(blockchain.__file__)"
 ```
 
-Thay `<URL_REPOSITORY>` bằng đường dẫn GitHub do trưởng nhóm cung cấp.
+Nếu dùng Python mới hơn, thay `-3.11` bằng phiên bản đã cài. Lệnh import chỉ kiểm tra package, không chạy blockchain. Hướng dẫn macOS/Linux ở [SETUP](docs/SETUP.md).
 
-### Kiểm tra môi trường
+Lệnh kiểm thử chung sau khi nhóm viết test:
 
-Mở Terminal tại thư mục project:
-
-```bash
-java -version
-git --version
+```powershell
+.\.venv\Scripts\python.exe -m pytest
 ```
 
-### Chạy kiểm thử
+Hiện chưa có test; pytest sẽ báo `no tests ran` và trả mã thoát 5. Đây không phải kết quả PASS bài lab. Chưa có lệnh chạy simulator hoặc script so sánh hai lần chạy.
 
-Trên Windows với Git Bash:
+## Cấu trúc chính
 
-```bash
-./mvnw clean test
+```text
+src/blockchain/  # Python: model, crypto, execution, ledger, network, consensus, simulator
+tests/          # Unit test, integration test và fixture (hiện chỉ giữ thư mục)
+config/         # Cấu hình và kịch bản mô phỏng sẽ được thêm sau
+logs/           # Bằng chứng chạy và log tái lập sẽ được thêm sau
+scripts/        # Script hỗ trợ, gồm kiểm tra determinism trong giai đoạn sau
+docs/           # Hướng dẫn hiện hành cho dự án Python
 ```
 
-Nếu xuất hiện `BUILD SUCCESS`, quá trình biên dịch và kiểm thử đã hoàn tất thành công.
+## Phạm vi bài lab cần đạt khi triển khai
 
-Lưu ý: Ở giai đoạn khởi tạo, chưa có chức năng blockchain hoàn chỉnh. Lệnh trên chủ yếu dùng để kiểm tra môi trường.
+- Transaction/header/vote có chữ ký và domain riêng; dữ liệu ký/hash có encoding xác định.
+- State key–value, kiểm tra quyền sở hữu và chống replay; cùng đầu vào cho cùng kết quả.
+- Mạng ít nhất 8 node, có delay/drop/duplicate/reorder, hạn mức gửi và block/unblock peer; header được chấp nhận trước khi gửi body.
+- Validator cố định, `n = 3f + 1`; hai pha Prevote/Precommit, quorum, lock và timeout. Safety luôn đúng, liveness sau khi mạng ổn định theo giả thiết đề.
+- Unit test và T1–T8; cùng input chạy hai lần cho log giống từng byte và cùng final state hash.
 
-## 5. Cấu trúc thư mục
+Số node và số validator là hai tham số riêng. Ví dụ 8 node có thể gồm 4 validator và 4 observer; nếu tất cả node là validator thì tối thiểu 10 để đồng thời thỏa `>= 8` và `n = 3f + 1`. Chưa đặt default chạy trong khung này.
 
-- `src/main/java/`: Chứa mã nguồn Java của chương trình.
-- `src/test/java/`: Chứa các bài kiểm thử.
-- `config/`: Chứa cấu hình mô phỏng mạng.
-- `logs/`: Chứa nhật ký hoạt động của chương trình.
-- `docs/`: Chứa tài liệu hướng dẫn và phân công.
+## Làm việc nhóm và bài nộp
 
-## 6. Quy tắc làm việc nhóm
+Mỗi thành viên làm trên nhánh riêng và mở Pull Request; thống nhất kiểu dữ liệu/API trước khi triển khai các module phụ thuộc. Phân công chi tiết trong [TASKS](docs/TASKS.md).
 
-1. Mỗi thành viên phụ trách một phần của chương trình.
-2. Không trực tiếp sửa code trên nhánh `main` sau khi thiết lập quy trình bảo vệ nhánh.
-3. Mỗi người tạo nhánh riêng để làm việc.
-4. Khi hoàn thành, tạo Pull Request để nhóm kiểm tra.
-5. Chưa hiểu yêu cầu hoặc cách triển khai thì phải trao đổi trước khi viết code.
-6. Mỗi thành viên cần hiểu và giải thích được phần code mình phụ trách.
-
-## 7. Tiến độ hiện tại
-
-**Giai đoạn 1 — Chuẩn bị môi trường.**
-
-Đã khởi tạo project Java và cấu hình Maven.
-
-Các thành phần blockchain chưa được triển khai.
+Khi hoàn thành, chuẩn bị thư mục `Lab01_ID1_ID2_ID3_ID4_ID5/` có `src/`, `tests/`, `logs/`, `config/`, `README.md`, `REPORT.pdf`, cùng file cấu hình Python cần thiết để chạy. Nén thành ZIP cùng tên. Báo cáo tối đa 10 trang, tiếng Việt hoặc Anh, có thiết kế, kết quả test, nguồn tham khảo và không chèn source code. Đối chiếu lại quy cách với đề gốc trước khi nộp; hiện chưa tạo báo cáo hoặc ZIP.
